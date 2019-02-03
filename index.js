@@ -6,8 +6,8 @@ var imagesByMimeTypes = document.querySelector(".card-img-top");
 var option1 = document.getElementById("gif");
 var option2 = document.getElementById("gif,jpg");
 var option3 = document.getElementById("gif,jpg,png");
-
-
+var search = document.getElementById("search");
+var breeds = [];
 const login = {
     headers: {
         ["x-api-key"]: "7aed50b3-58a5-4382-bffc-c00829952352"
@@ -23,12 +23,21 @@ fetch("https://api.thecatapi.com/v1/breeds")
 
 function generateoptions(cale) {
     for (i = 0; i < cale.length; i++) {
+        breeds[i] = cale[i].name;
         var option = document.createElement("option");
         option.value = cale[i].id;
         option.innerHTML = cale[i].name;
         select.appendChild(option);
     }
 }
+console.log(breeds);   
+var searchbreeds = breeds.filter(item => item.name.indexOf(search.value)!==-1).map(item => fetch('https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=' + item.name, login));
+console.log(searchbreeds); 
+
+Promise.all(searchbreeds)
+    .then(breeds => {
+    console.log(breeds);
+})
 //Obtinem lista cu categoriile
 fetch("https://api.thecatapi.com/v1/categories")
     .then(res => res.json())
