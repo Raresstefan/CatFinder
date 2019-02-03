@@ -34,19 +34,16 @@ function generateoptions(cale) {
     }
 }
 search.addEventListener("keyup", (ev) => {
-    
+    images2.innerHTML = '';
     if(ev.target.value.length>2)
-        {while(images2.firstChild)
-    {
-        images2.removeChild(firstChild);
-    }
-    doSearch(breeds);
+        {
+            doSearch(breeds);
         }    
     
 })
 function doSearch(breeds)
 {
-    var searchbreeds = breeds.filter(item => item.name.indexOf(search.value)!==-1).map(item => fetch('https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=' + item.id, login)
+    var searchbreeds = breeds.filter(item => item.name.toLowerCase().indexOf(search.value.toLowerCase())!==-1).map(item => fetch('https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=' + item.id, login)
         .then(res => res.json()));
  
 
@@ -71,6 +68,7 @@ function getRandom(arr1, n)
     }
     for(i=0;i<imagearr.length;i++)
     {
+        images2.innerHTML += `<img src = "${imagearr[i].url}" title = "${imagearr[i].breeds[0].name}">`;
         var img = document.createElement("img");
         img.src = imagearr[i].url;
         images2.appendChild(img);
