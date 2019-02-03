@@ -15,10 +15,7 @@ const login = {
 
 }
 //Obtinem lista cu rasele si o bagam in select
-search.addEventListener("keyup", (ev) => {
-    if(ev.target.value.length>2)
-    doSearch(breeds);
-})
+
 
 fetch("https://api.thecatapi.com/v1/breeds")
     .then(res => res.json())
@@ -36,6 +33,17 @@ function generateoptions(cale) {
         select.appendChild(option);
     }
 }
+search.addEventListener("keyup", (ev) => {
+    
+    if(ev.target.value.length>2)
+        {while(images2.firstChild)
+    {
+        images2.removeChild(firstChild);
+    }
+    doSearch(breeds);
+        }    
+    
+})
 function doSearch(breeds)
 {
     var searchbreeds = breeds.filter(item => item.name.indexOf(search.value)!==-1).map(item => fetch('https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=' + item.id, login)
@@ -47,10 +55,26 @@ Promise.all(searchbreeds)
         finalArray= [];
      results.forEach(item => {
         finalArray = [...finalArray, ...item];
-        console.log(finalArray[Math.floor(Math.random()*3)]);
+        getRandom(finalArray, 5);
      })
 })
 
+}
+function getRandom(arr1, n)
+{
+    
+    var imagearr=[];
+    for(i=0;i<n;i++)
+    {
+        let rand = arr1[Math.floor(Math.random() * n)];
+        imagearr.push(rand);
+    }
+    for(i=0;i<imagearr.length;i++)
+    {
+        var img = document.createElement("img");
+        img.src = imagearr[i].url;
+        images2.appendChild(img);
+    }
 } 
 /*function doImages(breeds)
 {
