@@ -1,7 +1,12 @@
 var select = document.getElementById("breed");
 var images2 = document.getElementById("images");
+var selectByMimeTypes = document.getElementById("MimeType");
+var card = document.querySelector(".card1");
+var imagesByMimeTypes = document.querySelector(".card-img-top");
+var option1 = document.getElementById("gif");
+var option2 = document.getElementById("gif,jpg");
+var option3 = document.getElementById("gif,jpg,png");
 
-var card = document.querySelector(".card");
 
 const login = {
     headers: {
@@ -31,39 +36,22 @@ fetch("https://api.thecatapi.com/v1/categories")
 
     function generateCategories(categories) {
         for(let i=0;i<categories.length;i++){
-            var select = document.createElement("select");
+            var button = document.createElement("button");
            
-            select.innerHTML= categories[i].name;
+            button.innerHTML= categories[i].name;
             var default_option = document.createElement("option");
             default_option.innerHTML = categories[i].name;
-            select.appendChild(default_option);
-            select.id = categories[i].id;
-            var option1 = document.createElement("option");
-            option1.value= "GIF";
-            option1.innerHTML = "GIF";
-            option1.addEventListener("click", (ev) => {
-                let endpoint = "https://api.thecatapi.com/v1/images/search?mime_types=gif";
-                fetch(endpoint, login)
-                    .then(res => res.json())
-                    .then(data => generateImagesByCategory(data));
-            })
-            var option2 = document.createElement("option");
-            option2.value = "JPG"
-            option2.innerHTML = "JPG"
-            var option3 = document.createElement("option");
-            option3.value = "PNG";
-            option3.innerHTML = "PNG";
-            select.appendChild(option1);
-            select.appendChild(option2);
-            select.appendChild(option3);
-            select.addEventListener("click", (ev) => {
+            
+            button.id = categories[i].id;
+            
+            button.addEventListener("click", (ev) => {
                 let endpoint = " https://api.thecatapi.com/v1/images/search?limit=5&category_ids=" + ev.target.id;
                 console.log(endpoint);
                 fetch(endpoint, login)
                     .then(res => res.json())
                     .then(data => generateImagesByCategory(data))
             })   
-            card.appendChild(select);
+            card.appendChild(button);
         }
     }
 function generateImagesByCategory(categorie)
@@ -104,8 +92,26 @@ function generateImages(images) {
     }
 }
 
-//Facem autentificarea:
-
-
-
-//cautam in functie de rase
+selectByMimeTypes.addEventListener("change", (ev) =>
+            {
+                
+                if(ev.target.value === "GIF")
+                 endpoint = "https://api.thecatapi.com/v1/images/search?mime_types=gif";
+                if(ev.target.value === "GIF,JPG")
+                 endpoint = "https://api.thecatapi.com/v1/images/search?mime_types=jpg,png";
+                if(ev.target.value === "GIF,JPG,PNG")
+                 endpoint = "https://api.thecatapi.com/v1/images/search?mime_types=gif,jpg,png";
+                fetch(endpoint, login)
+                    .then(res => res.json())
+                    .then(data => generateImagesByMimeTypes(data));
+            })
+            function generateImagesByMimeTypes(mime_types)
+            {
+                for(i=0;i<mime_types.length;i++)
+                {
+                    
+                    imagesByMimeTypes.src = mime_types[i].url;
+                   
+                }
+                
+            }
