@@ -15,13 +15,16 @@ const login = {
 
 }
 //Obtinem lista cu rasele si o bagam in select
-
+search.addEventListener("keyup", (ev) => {
+    if(ev.target.value.length>2)
+    doSearch(breeds);
+})
 
 fetch("https://api.thecatapi.com/v1/breeds")
     .then(res => res.json())
     .then(data => {generateoptions(data)
         breeds = data.map(item => ({name:item.name, id:item.id}));
-        doSearch(breeds);
+        //doSearch(breeds);
     });
 
 function generateoptions(cale) {
@@ -40,9 +43,11 @@ function doSearch(breeds)
  
 
 Promise.all(searchbreeds)
-    .then(breeds => {
-     search.addEventListener("change", (ev) => {
-         console.log(ev.target.value);
+    .then(results => {
+        finalArray= [];
+     results.forEach(item => {
+        finalArray = [...finalArray, ...item];
+        console.log(finalArray[Math.floor(Math.random()*3)]);
      })
 })
 
