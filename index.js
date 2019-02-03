@@ -19,7 +19,10 @@ const login = {
 
 fetch("https://api.thecatapi.com/v1/breeds")
     .then(res => res.json())
-    .then(data => generateoptions(data));
+    .then(data => {generateoptions(data)
+        breeds = data.map(item => ({name:item.name, id:item.id}));
+        doSearch(breeds);
+    });
 
 function generateoptions(cale) {
     for (i = 0; i < cale.length; i++) {
@@ -30,14 +33,24 @@ function generateoptions(cale) {
         select.appendChild(option);
     }
 }
-console.log(breeds);   
-var searchbreeds = breeds.filter(item => item.name.indexOf(search.value)!==-1).map(item => fetch('https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=' + item.name, login));
-console.log(searchbreeds); 
+function doSearch(breeds)
+{
+    var searchbreeds = breeds.filter(item => item.name.indexOf(search.value)!==-1).map(item => fetch('https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=' + item.id, login)
+        .then(res => res.json()));
+ 
 
 Promise.all(searchbreeds)
     .then(breeds => {
-    console.log(breeds);
+     search.addEventListener("change", (ev) => {
+         console.log(ev.target.value);
+     })
 })
+
+} 
+/*function doImages(breeds)
+{
+    console.log(breeds[0][0].url);
+}*/
 //Obtinem lista cu categoriile
 fetch("https://api.thecatapi.com/v1/categories")
     .then(res => res.json())
